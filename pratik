@@ -1,0 +1,22 @@
+import scrapy
+
+class necklacesetbot(scrapy.Spider):
+ name = 'necklacesetbot'
+
+  allowed_domains = ['www.houseofindya.com/zyra/necklace/cat']
+   start_urls = ['https://www.houseofindya.com/zyra/necklace/cat']
+
+ def parse(self, response):
+       description = response.css("li::attr(data-name)").extract()
+      price = response.css("li::attr(data-price)").extract()
+       catgItem = response.css(".catgItem").extract()
+       itemImage = catgItem.css("img::attr(data-original)").getall()
+       
+       for item in zip(description, price, itemImage):
+           scraped_info = {
+               'description' : item[0],
+               'price' : item[1],
+               'image_urls' : [item[2]]
+               }
+
+           yield scraped_info
